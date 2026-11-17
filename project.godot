@@ -1,12 +1,16 @@
+
 config_version=5
 
 [application]
+
 config/name="Party Legends 2"
+config/description="Local 3D party game for up to four players on one device."
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
-config/description="Local 3D party game for up to four players on one device."
+config/icon="res://icon.png"
 
 [display]
+
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/window_width_override=1280
@@ -15,10 +19,12 @@ window/stretch/mode="canvas_items"
 window/handheld/orientation=1
 
 [rendering]
+
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.025, 0.035, 0.07, 1)
 textures/vram_compression/import_etc2_astc=true
 
 [physics]
+
 3d/default_gravity=24.0
