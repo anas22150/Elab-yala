@@ -1,0 +1,44 @@
+name: Build Party Legends 2 APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Export Android APK
+        uses: firebelley/godot-export@v6.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
+          relative_project_path: ./
+          presets_to_export: Android
+          export_debug: true
+          verbose: true
+
+      - name: Locate APK
+        shell: bash
+        run: |
+          echo "Searching for APK in workspace and Godot build folders..."
+          APK="$(find "$GITHUB_WORKSPACE" "$HOME/.local/share/godot" -type f -iname '*.apk' -print -quit 2>/dev/null || true)"
+          if [ -z "$APK" ]; then
+            echo "No APK was created. Listing likely export directories:"
+            find "$HOME/.local/share/godot" -maxdepth 6 -type f 2>/dev/null | head -300
+            exit 1
+          fi
+          cp "$APK" "$GITHUB_WORKSPACE/PartyLegends.apk"
+          echo "Found APK: $APK"
+          ls -lh "$GITHUB_WORKSPACE/PartyLegends.apk"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Party-Legends-2-APK
+          path: PartyLegends.apk
+          if-no-files-found: error
